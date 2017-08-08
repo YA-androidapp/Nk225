@@ -11,6 +11,7 @@ library(tcltk) # プログレスバー
 library(forecast) # 時系列の作図と予測
 library(xts) # 時系列
 library(lubridate) # 時系列ボックスプロット
+library(ggplot2)
 
 
 
@@ -134,7 +135,12 @@ plot(decompose(nk225.xts[,4])) # 成分別プロット
 # ボックスプロット
 nk225.xts.date <- index(nk225.xts)
 nk225.df <- nk225 # 複製
+nk225.df$close <- nk225.df[,4]
 nk225.df$year <- factor(year(nk225.xts.date))
+nk225.df$month <- factor(month(nk225.xts.date))
+nk225.df$wday <- factor(weekdays(nk225.xts.date, abbreviate=T), levels=c('日', '月', '火', '水', '木', '金', '土'))
+p <- ggplot(data=nk225.df, aes(x=wday, y=close)) + facet_grid(month ~ year) + geom_boxplot() + xlab('Weekday') + ylab('Nk225')
+print(p)
 
 
 
